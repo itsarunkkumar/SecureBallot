@@ -13,6 +13,17 @@ router.get('/ping' , function(req, res) {
 router.post('/signup', async (req, res) => {
   try {
         const data = req.body;
+
+        if(data.role == 'admin'){
+            const adminExists = await User.exists({role: data.role})
+            if(adminExists){
+                res.status(200).json({
+                    message:'Admin exists Please change your role'
+                });
+
+            }
+        }
+
         const newUser = new User(data);
         const savedUser = await newUser.save(); 
 
