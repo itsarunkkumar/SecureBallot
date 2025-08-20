@@ -4,8 +4,6 @@ import Candidate from './../models/candidate.js';
 import User from './../models/user.js';
 
 import jwtUtils from './../jwt.js';
-import { count, error } from 'console';
-import candidate from './../models/candidate.js';
 const { jwtAuthMiddleware, generateToken } = jwtUtils;
 
 // this function used to check the User Role
@@ -70,8 +68,11 @@ router.put('/:candidateId', jwtAuthMiddleware , async (req, res) => {
                 message:'User Not Found',
             })
         }
+        res.status(200).json({
+            status:true,
+            message: 'User Updated SuccessFully'
+        });
 
-        console.log('Candidate Updated')
     } catch (error) {
         console.error;
         res.status(500).json({
@@ -81,7 +82,7 @@ router.put('/:candidateId', jwtAuthMiddleware , async (req, res) => {
     }
 });
 
-router.delete('/candidateId', jwtAuthMiddleware ,async (req, res) => {
+router.delete('/:candidateId', jwtAuthMiddleware ,async (req, res) => {
 
     try {
         // This function used to check the user role
@@ -92,7 +93,9 @@ router.delete('/candidateId', jwtAuthMiddleware ,async (req, res) => {
         }
 
         const candidateId = req.params.candidateId;
-        const response = async = User.findByIdAndDelete(candidateId);
+
+        console.log('candidateId',candidateId);
+        const response = await User.findByIdAndDelete(candidateId);
 
         if(!response){
             return res.status(404).json({
@@ -101,8 +104,8 @@ router.delete('/candidateId', jwtAuthMiddleware ,async (req, res) => {
             });
         }
 
-        console.log('Candidate deleted Success');
-        return res.status(200).status({
+        return res.status(200).json({
+            status:true,
             message: 'Candidate deleted Success',
         });
  
@@ -122,9 +125,6 @@ router.post('/vote/:candidateId', jwtAuthMiddleware , async (req, res) => {
 
     const candidateId = req.params.candidateId;
     const userId = req.user.id
-
-    console.log('userId', userId);
-    console.log('candidateId', candidateId);
 
     try {
         const candiate = await Candidate.findById(candidateId);
@@ -156,7 +156,7 @@ router.post('/vote/:candidateId', jwtAuthMiddleware , async (req, res) => {
         }
 
 
-        // Update the Candidate  document to rrecprd the vote
+        // Update the Candidate  document to the vote
         candiate.votes.push({user:userId})
         candiate.voteCount ++;
         await  candiate.save();

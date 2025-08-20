@@ -111,8 +111,10 @@ router.put('/profile/password', jwtAuthMiddleware , async (req, res) => {
         user.password = newPassword
         await user.save();
 
-        console.log('Password Updated');
-        res.json(200).json('Password Updated');
+        res.status(200).json({
+            status:true,
+            message:'Password Updated'
+        });
     } catch (error) {
         console.error(error);
         res.status(500).jsin({
@@ -126,7 +128,7 @@ router.put('/profile/password', jwtAuthMiddleware , async (req, res) => {
 
 router.get('/', jwtAuthMiddleware , async (req, res) => {
     try {
-        const data = await Person.find();
+        const data = await User.find();
         res.status(200).json({
             data: data
         });
@@ -137,68 +139,5 @@ router.get('/', jwtAuthMiddleware , async (req, res) => {
         });
     }
 }); 
-
-
-router.get('/:userType', async (req, res) => {
-
-   try{
-       const userType = req.params.userType;
-        if(userType == 'manager' || userType == 'chef' || userType == 'waiter'){
-
-            const data = await Person.find({work:userType});
-            const isEmpty = data.length === 0
-            if(isEmpty){
-                res.status(404).json({
-                    'msg' : 'This role is  not available',
-                });
-            }
-            res.status(200).json(data);
-
-        }else{
-            res.status(404).json({
-                error: 'Invalid work type'
-            });
-       }
-
-    } catch(err){
-        res.status(500).json({
-            error: err,
-            msg: 'Internal Server Error'
-        })
-
-    }
-
-});
-
-
-router.put('/update-user', async (req, res) => {
-    const { email, ...updateData } = req.body;
-
-    if (!email) {  
-     return res.status(400).json({ error: 'Email is required to find the user.' });
-    }
-
-  try {
-        const updatedPerson = await Person.findOneAndUpdate(
-            { email: email },      // find person by email
-            updateData,            // update with remaining fields
-            {
-                new: true,
-                runValidators: true
-            }
-        );
-
-        if (!updatedPerson) {
-            return res.status(404).json({ error: 'User not found with this email' });
-        }
-
-        res.status(200).json({
-            message: 'User updated successfully',
-            data: updatedPerson
-        });
-    } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error', details: error.message });
-    }
-});
 
 export default router; 

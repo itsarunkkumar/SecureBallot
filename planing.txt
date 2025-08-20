@@ -19,5 +19,5 @@ Routes?
 2.Signup
 3.vote one of the candiate
 
-Only one Admin in this Application -> Pending
-Check the Update and Delete Functionality -> Pending
+Only one Admin in this Application
+Check the Update and Delete Functionality
