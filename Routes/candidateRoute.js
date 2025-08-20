@@ -211,9 +211,30 @@ router.get('/vote/count', async (req, res) => {
     }
 });
 
+// Routes get to the All candidates
 router.get('/candidates', async(req, res) => {
     try {
-        
+        const allCandidates = await Candidate.find();
+        if(allCandidates.length == 0){
+            return res.status(200).json({
+                status:true,
+                message:'No Any Candidate Found'
+            });
+        }
+
+       const candidateData = allCandidates.map((data) => {
+            return {
+                name:data.name,
+                party:data.party
+
+            }
+       });
+
+        res.status(200).json({
+            status:true,
+            candidates:candidateData
+        });
+
     } catch (error) {
         console.error;
         res.status(500).json({
