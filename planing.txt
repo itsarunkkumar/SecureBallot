@@ -1,0 +1,23 @@
+Voting Applicatio
+
+
+What?
+-> A Functionality where user can give to the vote to the given set of candiates
+
+
+1.npm init
+2.npm i express
+3.npm i nodemon
+4.npm i mongoose
+5.npm i jsonwebtoken
+
+
+Models?
+Routes?
+
+1.Signin
+2.Signup
+3.vote one of the candiate
+
+Only one Admin in this Application -> Pending
+Check the Update and Delete Functionality -> Pending
